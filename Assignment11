@@ -1,0 +1,56 @@
+%%MNTC313 A11 Starter Code%%
+
+%%Please DO NOT change the user input format
+%%It has been formatted to work properly with the Octave Engine
+
+clc
+
+a = input('Enter a:');
+fprintf('\n');
+b = input('Enter b:');
+fprintf('\n');
+
+f = @(x) 1.8.^(0.045.*x)-1;
+
+%initialize Y value 
+Y = 0;
+
+%calculate and print true integral value 
+trueY = quadgk(f, a, b); 
+fprintf('True value: %.0f N\n', trueY);
+
+
+%for loop to calculate the force for each N value
+for N = [10 100 1000 10000 100000]
+   
+    xSet = linspace(a, b, N);
+    %evaluate function at x position
+    fSet = 1.8.^(0.045.*xSet) - 1;
+    %calculate width of each rectangle
+    dx = (b-a) / N; 
+    %adding all rectangle element areas
+    Y = sum(fSet * dx);
+    
+    %calculate error
+    e = ((Y - trueY) / trueY) * 100;
+    
+    %print output
+    fprintf('N = %.0f, F = %.0f N, Error %% = %.2f\n', N, Y, e);
+    
+end
+
+%new limits
+c = 450;
+d = 500;
+N = 10000;
+
+xSet = linspace(c, d, N);
+fSet = 1.8.^(0.045.*xSet) - 1;
+dx = (d-c)/N;
+Y = sum(fSet * dx);
+
+%area, height of 50 m and width of 50 m
+area = 50 * 50;
+pressure = (Y / 1000) / area;
+
+fprintf('Average pressure between 450 and 500 m: %.1f kPa\n', pressure);
